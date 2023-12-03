@@ -4,16 +4,20 @@ from collections import deque
 import click
 
 
+def findMatch(line):
+    matches = re.findall("\d", line)
+
+    if matches:
+        return int(matches[0] + matches[-1])
+
+    return 0
+
+
 @click.command()
 @click.argument("file", type=click.File(mode="r"))
 def cli(file):
-    output = 0
-    for line in deque(file):
-        matches = re.findall("\d", line)
-        if matches:
-            output += int(matches[0] + matches[-1])
-
-    click.echo(f"the correct coordinate number is {output}", nl=True)
+    matches = [findMatch(line) for line in deque(file)]
+    click.echo(f"the correct coordinate number is {sum(matches)}", nl=True)
 
 
 if __name__ == "__main__":
